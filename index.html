@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão Essencial</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/phosphor-icons/1.4.1/css/phosphor.min.css" />
+</head>
+<body>
+
+    <main class="app-wrapper">
+        <header class="app-header">
+            <h1>Visão Geral</h1>
+            <p>Seu ecossistema acadêmico em um só lugar.</p>
+        </header>
+
+        <section class="dashboard-grid">
+            <div class="dash-card">
+                <i class="ph ph-users"></i>
+                <div><h3 id="count-alunos">0</h3><span>Alunos</span></div>
+            </div>
+            <div class="dash-card">
+                <i class="ph ph-chalkboard-teacher"></i>
+                <div><h3 id="count-professores">0</h3><span>Professores</span></div>
+            </div>
+            <div class="dash-card">
+                <i class="ph ph-books"></i>
+                <div><h3 id="count-cursos">0</h3><span>Cursos</span></div>
+            </div>
+            <div class="dash-card">
+                <i class="ph ph-bookmark-simple"></i>
+                <div><h3 id="count-materias">0</h3><span>Matérias</span></div>
+            </div>
+        </section>
+
+        <nav class="list-nav">
+            <button class="nav-btn active" onclick="mudarAba('alunos')">Alunos</button>
+            <button class="nav-btn" onclick="mudarAba('professores')">Professores</button>
+            <button class="nav-btn" onclick="mudarAba('cursos')">Cursos</button>
+            <button class="nav-btn" onclick="mudarAba('materias')">Matérias</button>
+        </nav>
+
+        <section class="list-container" id="conteudo-lista">
+            </section>
+    </main>
+
+    <button class="fab-btn" onclick="abrirJanelaFlutuante()">
+        <i class="ph ph-plus"></i>
+    </button>
+
+    <div class="overlay hidden" id="janela-flutuante">
+        <div class="floating-window">
+            <header class="window-header">
+                <h2>Adicionar Novo</h2>
+                <button class="close-btn" onclick="fecharJanelaFlutuante()">
+                    <i class="ph ph-x"></i>
+                </button>
+            </header>
+            
+            <form id="form-cadastro" onsubmit="salvarDados(event)">
+                <div class="input-group">
+                    <label>O que deseja adicionar?</label>
+                    <select id="tipo-cadastro" onchange="adaptarCampos()">
+                        <option value="alunos">Aluno</option>
+                        <option value="professores">Professor</option>
+                        <option value="cursos">Curso</option>
+                        <option value="materias">Matéria</option>
+                    </select>
+                </div>
+                <div id="campos-dinamicos"></div>
+                <button type="submit" class="submit-btn">Salvar Registro</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="overlay hidden" id="janela-detalhes">
+        <div class="floating-window">
+            <header class="window-header">
+                <h2>Detalhes do Registro</h2>
+                <button class="close-btn" onclick="fecharDetalhes()">
+                    <i class="ph ph-x"></i>
+                </button>
+            </header>
+            
+            <div id="conteudo-detalhes" class="details-content">
+                </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

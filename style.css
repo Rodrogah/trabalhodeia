@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-page: #F7F7F9;
+    --surface: #FFFFFF;
+    --text-main: #111111;
+    --text-muted: #666666;
+    --border: #EAEAEE;
+    --accent: #000000;
+    --danger: #FF3B30;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+body { background-color: var(--bg-page); color: var(--text-main); -webkit-font-smoothing: antialiased; }
+
+.app-wrapper { max-width: 900px; margin: 40px auto; padding: 0 20px; padding-bottom: 100px; }
+
+.app-header { margin-bottom: 40px; }
+.app-header h1 { font-size: 28px; font-weight: 700; letter-spacing: -1px; }
+.app-header p { color: var(--text-muted); font-size: 15px; margin-top: 4px; }
+
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.dash-card { background: var(--surface); padding: 24px; border-radius: 20px; display: flex; align-items: center; gap: 16px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+.dash-card i { font-size: 32px; color: var(--text-muted); }
+.dash-card h3 { font-size: 24px; font-weight: 700; line-height: 1; }
+.dash-card span { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+.list-nav { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+.nav-btn { background: transparent; border: none; font-size: 15px; font-weight: 600; color: var(--text-muted); padding: 8px 16px; border-radius: 100px; cursor: pointer; transition: 0.2s; }
+.nav-btn:hover { background: var(--border); }
+.nav-btn.active { background: var(--accent); color: var(--surface); }
+
+.list-container { display: flex; flex-direction: column; gap: 12px; }
+
+/* Item da lista agora indica que é clicável */
+.list-item { background: var(--surface); padding: 16px 20px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); transition: transform 0.2s; cursor: pointer; }
+.list-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.04); border-color: #d1d1d6; }
+.item-info h4 { font-size: 16px; font-weight: 600; }
+.item-info p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+/* Botão de deletar - adicionado position relative para evitar conflito com o clique do card */
+.btn-delete { position: relative; z-index: 2; background: rgba(255, 59, 48, 0.1); color: var(--danger); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 18px; transition: 0.2s; }
+.btn-delete:hover { background: var(--danger); color: white; }
+
+.fab-btn { position: fixed; bottom: 40px; right: 40px; width: 64px; height: 64px; border-radius: 32px; background: var(--accent); color: white; border: none; font-size: 24px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 12px 32px rgba(0,0,0,0.25); transition: 0.3s; z-index: 10; }
+.fab-btn:hover { transform: scale(1.05); }
+
+.overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(247, 247, 249, 0.8); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 1; transition: opacity 0.3s ease; }
+.overlay.hidden { opacity: 0; pointer-events: none; }
+
+.floating-window { background: var(--surface); width: 100%; max-width: 420px; border-radius: 24px; padding: 32px; box-shadow: 0 24px 48px rgba(0,0,0,0.1); border: 1px solid var(--border); transform: translateY(0); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.overlay.hidden .floating-window { transform: translateY(40px); }
+
+.window-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.window-header h2 { font-size: 20px; font-weight: 700; }
+.close-btn { background: var(--bg-page); border: none; width: 32px; height: 32px; border-radius: 16px; cursor: pointer; font-size: 16px; color: var(--text-muted); display: flex; justify-content: center; align-items: center; transition: 0.2s; }
+.close-btn:hover { background: var(--border); color: var(--accent); }
+
+.input-group { margin-bottom: 20px; display: flex; flex-direction: column; }
+.input-group label { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); }
+input, select { padding: 14px 16px; background: var(--bg-page); border: 1px solid transparent; border-radius: 12px; font-size: 15px; outline: none; transition: 0.2s; }
+input:focus, select:focus { border-color: var(--accent); background: var(--surface); }
+
+.submit-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 14px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+.submit-btn:hover { background: #333; }
+
+/* Estilo interno do card de detalhes */
+.details-content p { font-size: 15px; margin-bottom: 16px; color: var(--text-main); }
+.details-content span { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
