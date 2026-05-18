@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão Essencial</title>
     <link rel="stylesheet" href="style.css">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/phosphor-icons/1.4.1/css/phosphor.min.css" />
 </head>
 <body>
 
@@ -16,21 +14,25 @@
             <p>Seu ecossistema acadêmico em um só lugar.</p>
         </header>
 
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Pesquisar e apertar Enter para abrir..." oninput="renderizarLista()" onkeypress="abrirCardPesquisa(event)">
+        </div>
+
         <section class="dashboard-grid">
             <div class="dash-card">
-                <i class="ph ph-users"></i>
+                <span class="text-icon">A</span>
                 <div><h3 id="count-alunos">0</h3><span>Alunos</span></div>
             </div>
             <div class="dash-card">
-                <i class="ph ph-chalkboard-teacher"></i>
+                <span class="text-icon">P</span>
                 <div><h3 id="count-professores">0</h3><span>Professores</span></div>
             </div>
             <div class="dash-card">
-                <i class="ph ph-books"></i>
+                <span class="text-icon">C</span>
                 <div><h3 id="count-cursos">0</h3><span>Cursos</span></div>
             </div>
             <div class="dash-card">
-                <i class="ph ph-bookmark-simple"></i>
+                <span class="text-icon">M</span>
                 <div><h3 id="count-materias">0</h3><span>Matérias</span></div>
             </div>
         </section>
@@ -46,17 +48,13 @@
             </section>
     </main>
 
-    <button class="fab-btn" onclick="abrirJanelaFlutuante()">
-        <i class="ph ph-plus"></i>
-    </button>
+    <button class="fab-btn" onclick="abrirJanelaFlutuante()">+</button>
 
     <div class="overlay hidden" id="janela-flutuante">
         <div class="floating-window">
             <header class="window-header">
                 <h2>Adicionar Novo</h2>
-                <button class="close-btn" onclick="fecharJanelaFlutuante()">
-                    <i class="ph ph-x"></i>
-                </button>
+                <button class="close-btn" onclick="fecharJanelaFlutuante()">✕</button>
             </header>
             
             <form id="form-cadastro" onsubmit="salvarDados(event)">
@@ -79,9 +77,7 @@
         <div class="floating-window">
             <header class="window-header">
                 <h2>Detalhes do Registro</h2>
-                <button class="close-btn" onclick="fecharDetalhes()">
-                    <i class="ph ph-x"></i>
-                </button>
+                <button class="close-btn" onclick="fecharDetalhes()">✕</button>
             </header>
             
             <div id="conteudo-detalhes" class="details-content">

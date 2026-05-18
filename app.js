@@ -11,7 +11,6 @@ function salvarNoCache(colecao, dados) {
     renderizarLista();
 }
 
-// --- CONTROLE DAS JANELAS FLUTUANTES ---
 function abrirJanelaFlutuante() {
     document.getElementById('janela-flutuante').classList.remove('hidden');
     adaptarCampos();
@@ -26,7 +25,6 @@ function fecharDetalhes() {
     document.getElementById('janela-detalhes').classList.add('hidden');
 }
 
-// Abre os detalhes ao clicar em um card
 function abrirDetalhes(id) {
     const dados = obterDados(abaAtiva);
     const item = dados.find(d => d.id === id);
@@ -38,9 +36,8 @@ function abrirDetalhes(id) {
             <p><span>Informação</span> ${item.detalhe}</p>
         `;
         
-        // Se existir um email salvo (Alunos e Professores), exibe
         if (item.email) {
-            html += `<p><span>E-mail</span> <a href="mailto:${item.email}" style="color:#000;">${item.email}</a></p>`;
+            html += `<p><span>E-mail</span> <a href="mailto:${item.email}" style="color:#000; text-decoration: none; font-weight: 500;">${item.email}</a></p>`;
         }
 
         container.innerHTML = html;
@@ -48,25 +45,54 @@ function abrirDetalhes(id) {
     }
 }
 
-// --- FORMULÁRIO DINÂMICO ---
+// --- NOVA FUNÇÃO: Abre o card ao dar Enter na pesquisa ---
+function abrirCardPesquisa(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Evita que a página recarregue
+        
+        const termoBusca = document.getElementById('search-input').value.toLowerCase().trim();
+        if (termoBusca === '') return;
+
+        const dados = obterDados(abaAtiva);
+        
+        // Encontra o primeiro registro que bata com a pesquisa (nome, email ou info)
+        const itemEncontrado = dados.find(item => {
+            const matchesNome = item.nome.toLowerCase().includes(termoBusca);
+            const matchesDetalhe = item.detalhe.toLowerCase().includes(termoBusca);
+            const matchesEmail = item.email ? item.email.toLowerCase().includes(termoBusca) : false;
+            
+            return matchesNome || matchesDetalhe || matchesEmail;
+        });
+
+        // Se encontrar alguém, abre a janela de detalhes dessa pessoa
+        if (itemEncontrado) {
+            abrirDetalhes(itemEncontrado.id);
+            // Limpa o input após encontrar, para a tela voltar ao normal quando fechar o card
+            document.getElementById('search-input').value = '';
+            renderizarLista();
+        } else {
+            alert("Nenhum registro exato encontrado com este termo.");
+        }
+    }
+}
+
 function adaptarCampos() {
     const tipo = document.getElementById('tipo-cadastro').value;
     const container = document.getElementById('campos-dinamicos');
     
     let html = '';
 
-    // Alunos e Professores agora têm o campo de e-mail
     if (tipo === 'alunos') {
         html = `
             <div class="input-group"><label>Nome do Aluno</label><input type="text" id="cad-nome" required></div>
             <div class="input-group"><label>Matrícula / RA</label><input type="text" id="cad-info" required></div>
-            <div class="input-group"><label>E-mail do Cadastrado</label><input type="email" id="cad-email" required></div>
+            <div class="input-group"><label>E-mail do Aluno</label><input type="email" id="cad-email" placeholder="exemplo@email.com" required></div>
         `;
     } else if (tipo === 'professores') {
         html = `
             <div class="input-group"><label>Nome do Professor</label><input type="text" id="cad-nome" required></div>
             <div class="input-group"><label>Especialidade</label><input type="text" id="cad-info" required></div>
-            <div class="input-group"><label>E-mail Corporativo</label><input type="email" id="cad-email" required></div>
+            <div class="input-group"><label>E-mail Corporativo</label><input type="email" id="cad-email" placeholder="professor@escola.com" required></div>
         `;
     } else if (tipo === 'cursos') {
         html = `
@@ -83,7 +109,6 @@ function adaptarCampos() {
     container.innerHTML = html;
 }
 
-// --- CRUD ---
 function salvarDados(event) {
     event.preventDefault();
     
@@ -91,7 +116,6 @@ function salvarDados(event) {
     const nome = document.getElementById('cad-nome').value;
     const info = document.getElementById('cad-info').value;
     
-    // Captura o email apenas se o campo existir no formulário
     const inputEmail = document.getElementById('cad-email');
     const email = inputEmail ? inputEmail.value : null;
     
@@ -112,15 +136,12 @@ function salvarDados(event) {
 }
 
 function deletarItem(event, id) {
-    // Impede que o clique no botão de excluir abra a janela de detalhes
     event.stopPropagation(); 
-    
     let dados = obterDados(abaAtiva);
     dados = dados.filter(item => item.id !== id);
     salvarNoCache(abaAtiva, dados);
 }
 
-// --- INTERFACE ---
 function atualizarDashboard() {
     document.getElementById('count-alunos').innerText = obterDados('alunos').length;
     document.getElementById('count-professores').innerText = obterDados('professores').length;
@@ -134,36 +155,46 @@ function mudarAba(tipo) {
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     event?.currentTarget?.classList.add('active'); 
     
+    // Limpa a pesquisa ao trocar de aba
+    document.getElementById('search-input').value = '';
+    
     renderizarLista();
 }
 
 function renderizarLista() {
     const dados = obterDados(abaAtiva);
     const container = document.getElementById('conteudo-lista');
+    const termoBusca = document.getElementById('search-input').value.toLowerCase();
+    
     container.innerHTML = '';
 
-    if (dados.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color: #666; padding: 20px;">Nenhum registro encontrado nesta categoria.</p>`;
+    // Filtra os dados conforme a pessoa digita
+    const dadosFiltrados = dados.filter(item => {
+        const matchesNome = item.nome.toLowerCase().includes(termoBusca);
+        const matchesDetalhe = item.detalhe.toLowerCase().includes(termoBusca);
+        const matchesEmail = item.email ? item.email.toLowerCase().includes(termoBusca) : false;
+        
+        return matchesNome || matchesDetalhe || matchesEmail;
+    });
+
+    if (dadosFiltrados.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color: #666; padding: 20px;">Nenhum registro encontrado.</p>`;
         return;
     }
 
-    dados.forEach(item => {
-        // A div list-item agora tem um onclick que abre os detalhes
+    dadosFiltrados.forEach(item => {
         container.innerHTML += `
             <div class="list-item" onclick="abrirDetalhes('${item.id}')">
                 <div class="item-info">
                     <h4>${item.nome}</h4>
                     <p>${item.detalhe}</p>
                 </div>
-                <button class="btn-delete" onclick="deletarItem(event, '${item.id}')">
-                    <i class="ph ph-trash"></i>
-                </button>
+                <button class="btn-delete" onclick="deletarItem(event, '${item.id}')">✕</button>
             </div>
         `;
     });
 }
 
-// Inicializa a aplicação
 window.onload = () => {
     atualizarDashboard();
     renderizarLista();
